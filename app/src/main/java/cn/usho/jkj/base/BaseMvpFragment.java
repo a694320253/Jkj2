@@ -7,7 +7,7 @@ package cn.usho.jkj.base;
  * Email：wei.azheng@foxmail.com
  * Description：
  */
-public abstract class BaseMvpFragment<T extends BasePresenter>  extends BaseFragment implements BaseView{
+public  class BaseMvpFragment<T extends BasePresenter>  extends BaseFragment implements BaseView{
 
     protected T mPresenter;
 
@@ -16,7 +16,23 @@ public abstract class BaseMvpFragment<T extends BasePresenter>  extends BaseFrag
         super.onDestroyView();
         if (mPresenter != null) {
             mPresenter.detachView();
+            mPresenter=null;
         }
         super.onDestroyView();
+    }
+
+    @Override
+    public void showLoading() {
+
+    }
+
+    @Override
+    public void hideLoading() {
+
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+
     }
 }

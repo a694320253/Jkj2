@@ -5,32 +5,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import cn.usho.jkj.R;
+import cn.usho.jkj.base.BaseMvpFragment;
+import cn.usho.jkj.contract.FragmentContract;
+import cn.usho.jkj.presenter.FragmentPresenter;
 import cn.usho.jkj.view.activity.SecondActivity;
 
 
-public class TabFragment extends Fragment {
+public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements FragmentContract.View {
 
     public static final String BUNDLE_KEY_TITLE = "key_title";
     protected View mView;
     private String mTitle;
     private TextView mTv_title;
 
-    public interface OnTitleClickListener {
-        void onClick(String title);
-    }
-
-    private OnTitleClickListener mListener;
-
-    public void setOnTitleClickListener(OnTitleClickListener mListener) {
-        this.mListener = mListener;
-    }
 
     public static TabFragment newInstance(String mTitle) {
         Bundle bundle = new Bundle();
@@ -66,6 +59,7 @@ public class TabFragment extends Fragment {
     }
 
     private void initView() {
+        mPresenter=new FragmentPresenter(this);
         mTv_title = mView.findViewById(R.id.tv_title);
         mTv_title.setText(mTitle);
         mTv_title.setOnClickListener(new View.OnClickListener() {

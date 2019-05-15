@@ -1,8 +1,5 @@
 package cn.usho.jkj.base;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-
 /**
  * @author azheng
  * @date 2018/4/24.
@@ -14,11 +11,6 @@ public  class BaseMvpActivity<T extends BasePresenter> extends BaseActivity impl
 
     protected T mPresenter;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
 
 
     @Override

@@ -1,6 +1,7 @@
 package cn.usho.jkj.view.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,16 +12,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import cn.usho.jkj.R;
+import cn.usho.jkj.view.activity.SecondActivity;
 
 
 public class TabFragment extends Fragment {
 
-    public static final String BUNDLE_KEY_TITLE ="key_title";
+    public static final String BUNDLE_KEY_TITLE = "key_title";
     protected View mView;
     private String mTitle;
     private TextView mTv_title;
 
-    public interface OnTitleClickListener{
+    public interface OnTitleClickListener {
         void onClick(String title);
     }
 
@@ -30,9 +32,9 @@ public class TabFragment extends Fragment {
         this.mListener = mListener;
     }
 
-    public static TabFragment newInstance(String mTitle){
+    public static TabFragment newInstance(String mTitle) {
         Bundle bundle = new Bundle();
-        bundle.putString(BUNDLE_KEY_TITLE,mTitle);
+        bundle.putString(BUNDLE_KEY_TITLE, mTitle);
         TabFragment tabFragment = new TabFragment();
         tabFragment.setArguments(bundle);
         return tabFragment;
@@ -44,8 +46,8 @@ public class TabFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle arguments = getArguments();
-        if (arguments != null){
-            mTitle = arguments.getString(BUNDLE_KEY_TITLE,"");
+        if (arguments != null) {
+            mTitle = arguments.getString(BUNDLE_KEY_TITLE, "");
         }
     }
 
@@ -69,20 +71,7 @@ public class TabFragment extends Fragment {
         mTv_title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //获取activity对象
-                // 写法1：
-//                MainActivity activity = (MainActivity) getActivity();
-//                activity.changeWeChatTab("微信 Changed！");
-
-                // 写法2：
-
-
-                //问题在于：我们Fragment会触发一些事件，Activity去响应这些事件
-
-                if (mListener != null){
-                    mListener.onClick("微信Changed！ ");
-                }
-
+                startActivity(new Intent(getActivity(), SecondActivity.class));
             }
         });
     }
@@ -99,7 +88,7 @@ public class TabFragment extends Fragment {
 
     }
 
-    public void changeTitle(String title){
+    public void changeTitle(String title) {
         if (!isAdded())
             return;
         mTv_title.setText(title);

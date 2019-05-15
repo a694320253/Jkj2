@@ -2,63 +2,97 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v4.view.ViewPager
+        android:id="@+id/vp_main"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:id="@+id/vp_main"
-        tools:context=".MainActivity">
-
-
-    </android.support.v4.view.ViewPager>
+        tools:context=".MainActivity" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#aaaaaa"/>
+        android:background="@color/horizontal_line_color" />
 
-    <LinearLayout
-
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:background="#eeeeee"
+    <cn.usho.jkj.view.customview.WechatRadioGroup
+        android:id="@+id/radiogroup"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/app_tab_bg"
+        android:orientation="horizontal">
 
-        <cn.usho.jkj.view.customview.TabView
-            android:id="@+id/tab_wechat"
+        <cn.usho.jkj.view.customview.WechatRadioButton
+            android:id="@+id/rb_1"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="微信"/>
+            android:checked="true"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="3dp"
+            android:text="@string/main_tab_1"
+            android:textColor="@color/app_tab_text_color"
+            android:textSize="@dimen/app_main_tab_text_size12"
+            app:defocus_icon="@drawable/tab_com_normal"
+            app:focus_color="@color/app_main_color"
+            app:focus_icon="@drawable/tab_com_selected"
+            app:icon_height="23dp"
+            app:icon_width="30dp" />
 
-        <cn.usho.jkj.view.customview.TabView
-            android:id="@+id/tab_friend"
+        <cn.usho.jkj.view.customview.WechatRadioButton
+            android:id="@+id/rb_2"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="通讯录"/>
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="3dp"
+            android:text="@string/main_tab_2"
+            android:textColor="@color/app_tab_text_color"
+            android:textSize="@dimen/app_main_tab_text_size12"
+            app:defocus_icon="@drawable/tab_event_normal"
+            app:focus_color="@color/app_main_color"
+            app:focus_icon="@drawable/tab_event_selected"
+            app:icon_height="23dp"
+            app:icon_width="30dp" />
 
-        <cn.usho.jkj.view.customview.TabView
-            android:id="@+id/tab_find"
+        <cn.usho.jkj.view.customview.WechatRadioButton
+            android:id="@+id/rb_3"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="发现"/>
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="3dp"
+            android:text="@string/main_tab_3"
+            android:textColor="@color/app_tab_text_color"
+            android:textSize="@dimen/app_main_tab_text_size12"
+            app:defocus_icon="@drawable/tab_discover_normal"
+            app:focus_color="@color/app_main_color"
+            app:focus_icon="@drawable/tab_discover_selected"
+            app:icon_height="23dp"
+            app:icon_width="30dp" />
 
-        <cn.usho.jkj.view.customview.TabView
-            android:id="@+id/tab_mine"
+        <cn.usho.jkj.view.customview.WechatRadioButton
+            android:id="@+id/rb_4"
             android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="我"/>
-
-
-    </LinearLayout>
-
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="3dp"
+            android:text="@string/main_tab_4"
+            android:textColor="@color/app_tab_text_color"
+            android:textSize="@dimen/app_main_tab_text_size12"
+            app:defocus_icon="@drawable/tab_myself_normal"
+            app:focus_color="@color/app_main_color"
+            app:focus_icon="@drawable/tab_myself_selected"
+            app:icon_height="23dp"
+            app:icon_width="30dp" />
+    </cn.usho.jkj.view.customview.WechatRadioGroup>
 </LinearLayout>
 

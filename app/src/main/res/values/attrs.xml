@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="left_text" format="string" />
+    <attr name="left_text_color" format="color" />
+    <attr name="left_text_size" format="float" />
+    <attr name="center_text" format="string" />
+    <attr name="center_text_color" format="color" />
+    <attr name="center_text_size" format="float" />
+    <attr name="center2_text" format="string" />
+    <attr name="center2_text_color" format="color" />
+    <attr name="center2_text_size" format="float" />
+    <attr name="right_text" format="string" />
+    <attr name="right_text_color" format="color" />
+    <attr name="right_text_size" format="float" />
+    <attr name="hint_text" format="string" />
+    <attr name="hint_text_color" format="color" />
+    <attr name="left_pic" format="reference" />
+    <attr name="right_pic" format="reference" />
+    <attr name="is_show_left_view" format="boolean" />
+    <attr name="is_show_right_view" format="boolean" />
+    <attr name="is_show_line" format="boolean" />
+    <attr name="line_height" format="dimension" />
+    <attr name="line_color" format="color" />
+    <attr name="item_padding" format="dimension" />
+    <attr name="border_width" format="dimension" />
+    <attr name="border_color" format="color" />
+    <attr name="support_refresh" format="boolean" />
+    <attr name="support_load_more" format="boolean" />
+    <attr name="span_count" format="integer" />
+    <attr name="title" format="string" />
+    <attr name="center_text_padding_left" format="dimension" />
+
+    <declare-styleable name="MyViewPager">
+        <attr name="scroll_mode" format="enum">
+            <enum name="DRAWER_LAYOUT" value="0" />
+            <enum name="VIEW_PAGER" value="1" />
+        </attr>
+    </declare-styleable>
+
+
+    <declare-styleable name="WechatRadioButton">
+        <attr name="focus_icon" format="reference" />
+        <attr name="defocus_icon" format="reference" />
+        <attr name="focus_color" format="color" />
+        <attr name="icon_width" format="dimension" />
+        <attr name="icon_height" format="dimension" />
+        <attr name="isShowDot" format="boolean" />
+        <attr name="dotColor" format="color" />
+        <attr name="dotRedius" format="dimension" />
+        <attr name="dotTextColor" format="color" />
+        <attr name="dotTextSize" format="float" />
+    </declare-styleable>
+    <declare-styleable name="SimpleEditLayout">
+        <attr name="left_text" />
+        <attr name="left_text_size" />
+        <attr name="center_text" />
+        <attr name="center_text_color" />
+        <attr name="center_text_size" />
+        <attr name="left_text_color" />
+        <attr name="right_text" />
+        <attr name="right_text_size" />
+        <attr name="right_text_color" />
+        <attr name="hint_text" />
+        <attr name="hint_text_color" />
+        <attr name="is_show_left_text" format="boolean" />
+        <attr name="is_show_left_view" />
+        <attr name="is_show_right_layout" format="boolean" />
+        <attr name="is_show_right_view" />
+        <attr name="is_center_enable" format="boolean" />
+        <attr name="center_padding" format="dimension" />
+        <attr name="center_max_length" format="integer" />
+        <attr name="center_max_lines" format="integer" />
+        <attr name="right_pic" />
+        <attr name="item_height" format="dimension" />
+        <attr name="input_type" format="enum">
+            <enum name="text" value="1" />
+            <enum name="number" value="2" />
+            <enum name="password" value="3" />
+            <enum name="numberDecimal" value="4" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="CustomTitleBar">
+        <attr name="left_pic" />
+        <attr name="center_text" />
+        <attr name="center_text_color" />
+        <attr name="center_text_size" />
+        <attr name="root_view_bg" format="color|reference" />
+        <attr name="search_pic" format="reference" />
+        <attr name="add_pic" format="reference" />
+        <attr name="is_search_show" format="boolean" />
+        <attr name="is_add_show" format="boolean" />
+        <attr name="is_tv_right_show" format="boolean" />
+
+    </declare-styleable>
+
+    <declare-styleable name="SimpleItem">
+        <attr name="left_pic" />
+        <attr name="right_pic" />
+        <attr name="center_text" />
+        <attr name="center_text_color" />
+        <attr name="center_text_size" />
+        <attr name="center2_text" />
+        <attr name="center2_text_color" />
+        <attr name="center2_text_size" />
+        <attr name="right_text" />
+        <attr name="right_text_color" />
+        <attr name="right_text_size" />
+        <attr name="is_show_center2_text" format="boolean" />
+        <attr name="is_show_left_view" />
+        <attr name="is_show_right_view" />
+        <attr name="is_show_right_text" format="boolean" />
+        <attr name="is_show_line" />
+        <attr name="line_height" />
+        <attr name="line_color" />
+        <attr name="item_padding" />
+    </declare-styleable>
+
+    <declare-styleable name="SimpleLabelItem">
+        <attr name="right_pic" />
+        <attr name="left_text" />
+        <attr name="left_text_color" />
+        <attr name="left_text_size" />
+        <attr name="center_text" />
+        <attr name="center_text_color" />
+        <attr name="center_text_size" />
+        <attr name="center_text_lines" format="integer" />
+        <attr name="is_show_right_view" />
+        <attr name="is_show_line" />
+        <attr name="line_height" />
+        <attr name="line_color" />
+        <attr name="is_item_enable" format="boolean"/>
+        <attr name="item_padding" />
+        <attr name="center_text_padding_left" />
+        <attr name="center_text_gravity" format="enum">
+            <enum name="start" value="0" />
+            <enum name="center" value="1" />
+            <enum name="end" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="MagicListLayout">
+        <attr name="support_refresh" />
+        <attr name="support_load_more" />
+        <attr name="support_image_header" format="boolean" />
+        <attr name="divider" format="reference" />
+        <attr name="divider_height" format="dimension" />
+
+    </declare-styleable>
+
+    <declare-styleable name="MagicRecycleListLayout">
+        <attr name="support_refresh" />
+        <attr name="support_load_more" />
+        <attr name="load_more_show_time" format="integer" />
+        <attr name="layout_manager" format="enum">
+            <enum name="linear_layout" value="0" />
+            <enum name="grid_layout" value="1" />
+            <enum name="staggered_grid_layout" value="2" />
+        </attr>
+        <attr name="span_count" />
+
+    </declare-styleable>
+
+
+    <declare-styleable name="CircleImageView">
+        <attr name="border_width" />
+        <attr name="border_color" />
+    </declare-styleable>
+
+    <declare-styleable name="RoundRectImageView">
+        <attr name="border_width" />
+        <attr name="border_color" />
+        <attr name="bound_radio" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="CustomRatingBar">
+        <attr name="clickable" format="boolean" />
+        <attr name="halfstart" format="boolean" />
+        <attr name="starCount" format="integer" />
+        <attr name="starEmpty" format="reference" />
+        <attr name="starFill" format="reference" />
+        <attr name="starHalf" format="reference" />
+        <attr name="starImagePadding" format="dimension" />
+        <attr name="starImageWidth" format="dimension" />
+        <attr name="starImageHeight" format="dimension" />
+        <attr name="starNum" format="integer" />
+
+    </declare-styleable>
+
+    <declare-styleable name="SimpleSwitchItem">
+        <attr name="left_text_size" />
+        <attr name="left_text_color" />
+        <attr name="left_text" />
+        <attr name="btm_text_size" format="float" />
+        <attr name="btm_text_color" format="color" />
+        <attr name="btm_text" format="string" />
+        <attr name="padding_top_btm" format="dimension" />
+        <attr name="left_pic" />
+        <attr name="is_toggle_on" format="boolean" />
+        <attr name="is_btm_text_show" format="boolean" />
+
+    </declare-styleable>
+
+    <declare-styleable name="StatisticsGridLayout">
+        <attr name="title" />
+        <attr name="span_count" />
+    </declare-styleable>
+    <declare-styleable name="ManageGridLayout">
+        <attr name="title" />
+        <attr name="span_count" />
+    </declare-styleable>
+
+    <declare-styleable name="WheelView">
+        <attr name="text_size" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="CircleChart">
+
+        <attr name="circle_radius" format="float" />
+        <attr name="ring_bg" format="color" />
+        <attr name="angel_stroke" format="float" />
+        <attr name="angel_start" format="float" />
+        <attr name="circle_center_text" format="string" />
+        <attr name="circle_center_text_size" format="float" />
+        <attr name="circle_center_text_stroke" format="float" />
+        <attr name="circle_center_text_color" format="color" />
+        <attr name="angel_mode" format="enum">
+            <enum name="FILL" value="0" />
+            <enum name="STROKE" value="1" />
+        </attr>
+        <attr name="circle_mode" format="enum">
+            <enum name="FILL" value="0" />
+            <enum name="STROKE" value="1" />
+        </attr>
+
+    </declare-styleable>
+
+</resources>

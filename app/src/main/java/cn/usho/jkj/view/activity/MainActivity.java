@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +14,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import cn.usho.jkj.R;
+import cn.usho.jkj.base.BaseMvpActivity;
+import cn.usho.jkj.contract.MainContract;
+import cn.usho.jkj.presenter.MainPresenter;
 import cn.usho.jkj.view.customview.WechatRadioGroup;
 import cn.usho.jkj.view.fragment.TabFragment;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseMvpActivity<MainPresenter> implements View.OnClickListener ,MainContract.View{
 
     private ViewPager mVp_main;
     private List<String> mTitles = new ArrayList<>(Arrays.asList("社群","活动","发现","我的"));
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initView() {
         mVp_main = findViewById(R.id.vp_main);
         radioGroup=findViewById(R.id.radiogroup);
+        mPresenter = new MainPresenter(this);
     }
 
     @Override

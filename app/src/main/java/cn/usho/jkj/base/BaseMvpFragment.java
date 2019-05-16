@@ -7,7 +7,7 @@ package cn.usho.jkj.base;
  * Email：wei.azheng@foxmail.com
  * Description：
  */
-public  class BaseMvpFragment<T extends BasePresenter>  extends BaseFragment implements BaseView{
+public abstract class BaseMvpFragment<T extends BasePresenter>  extends BaseFragment implements BaseView{
 
     protected T mPresenter;
 

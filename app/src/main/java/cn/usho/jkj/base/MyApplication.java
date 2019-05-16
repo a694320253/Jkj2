@@ -17,7 +17,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        LogUtils.getConfig().setLogSwitch(false).setBorderSwitch(false).
+        LogUtils.getConfig().setLogSwitch(true).setBorderSwitch(false).
                 setLogHeadSwitch(false).setLog2FileSwitch(false).setGlobalTag("TAGTAG");
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.

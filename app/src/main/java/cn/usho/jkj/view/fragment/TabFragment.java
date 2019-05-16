@@ -1,19 +1,21 @@
 package cn.usho.jkj.view.fragment;
 
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
 
 import cn.usho.jkj.R;
+import cn.usho.jkj.adapter.PullToRefreshAdapter;
 import cn.usho.jkj.base.BaseMvpFragment;
 import cn.usho.jkj.contract.FragmentContract;
 import cn.usho.jkj.presenter.FragmentPresenter;
-import cn.usho.jkj.view.activity.SecondActivity;
 
 
 public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements FragmentContract.View {
@@ -21,7 +23,11 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
     public static final String BUNDLE_KEY_TITLE = "key_title";
     private String mTitle;
     private TextView mTv_title;
-
+    private static final int PAGE_SIZE = 6;
+    private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private PullToRefreshAdapter mAdapter;
+    private int mNextRequestPage = 1;
 
     public static TabFragment newInstance(String mTitle) {
         Bundle bundle = new Bundle();
@@ -46,6 +52,7 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
     @Override
     public void initData() {
         mPresenter=new FragmentPresenter(this);
+//        mSwipeRefreshLayout.setRefreshing(true);
         LogUtils.v("TabFragment------"+"initData");
     }
 
@@ -54,10 +61,20 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
         LogUtils.v("TabFragment------"+"initView");
         mTv_title = view.findViewById(R.id.tv_title);
         mTv_title.setText(mTitle);
-        mTv_title.setOnClickListener(new View.OnClickListener() {
+        mRecyclerView = view.findViewById(R.id.rv_list);
+        mSwipeRefreshLayout = view.findViewById(R.id.swipeLayout);
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), SecondActivity.class));
+            public void onRefresh() {
+               LogUtils.v("onRefresh----------");
+                new Handler().postDelayed(new Runnable() {//模拟耗时操作
+                    @Override
+                    public void run() {
+                        mSwipeRefreshLayout.setRefreshing(false);//取消刷新
+
+                    }
+                },2000);
             }
         });
     }

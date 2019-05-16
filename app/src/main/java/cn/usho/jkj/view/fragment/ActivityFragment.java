@@ -16,17 +16,17 @@ import cn.usho.jkj.presenter.FragmentPresenter;
 import cn.usho.jkj.view.activity.SecondActivity;
 
 
-public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements FragmentContract.View {
+public class ActivityFragment extends BaseMvpFragment<FragmentPresenter> implements FragmentContract.View {
 
     public static final String BUNDLE_KEY_TITLE = "key_title";
     private String mTitle;
     private TextView mTv_title;
 
 
-    public static TabFragment newInstance(String mTitle) {
+    public static ActivityFragment newInstance(String mTitle) {
         Bundle bundle = new Bundle();
         bundle.putString(BUNDLE_KEY_TITLE, mTitle);
-        TabFragment tabFragment = new TabFragment();
+        ActivityFragment tabFragment = new ActivityFragment();
         tabFragment.setArguments(bundle);
         return tabFragment;
     }
@@ -39,19 +39,19 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
         if (arguments != null) {
             mTitle = arguments.getString(BUNDLE_KEY_TITLE, "");
         }
-        LogUtils.v("TabFragment------"+"onCreate");
+        LogUtils.v("ActivityFragment------"+"onCreate");
     }
 
 
     @Override
     public void initData() {
         mPresenter=new FragmentPresenter(this);
-        LogUtils.v("TabFragment------"+"initData");
+        LogUtils.v("ActivityFragment------"+"initData");
     }
 
     @Override
     protected void initView(View view) {
-        LogUtils.v("TabFragment------"+"initView");
+        LogUtils.v("ActivityFragment------"+"initView");
         mTv_title = view.findViewById(R.id.tv_title);
         mTv_title.setText(mTitle);
         mTv_title.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +64,7 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
 
     @Override
     protected int getLayoutId() {
-        LogUtils.v("TabFragment------"+"getLayoutId");
+        LogUtils.v("ActivityFragment------"+"getLayoutId");
         return R.layout.fragment_tab;
     }
 }

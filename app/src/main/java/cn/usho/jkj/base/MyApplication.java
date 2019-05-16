@@ -12,12 +12,13 @@ import com.squareup.leakcanary.LeakCanary;
  * 日期：   2019/5/15 .
  * 公司： Usho Network Tech. Co., Ltd&lt;br&gt;
  */
-public class MyApplication  extends Application {
+public class MyApplication extends Application {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        LogUtils.getConfig().setLogSwitch(true).setBorderSwitch(false).setLogHeadSwitch(false).setLog2FileSwitch(false).setGlobalTag("TAGTAG");
+        LogUtils.getConfig().setLogSwitch(false).setBorderSwitch(false).
+                setLogHeadSwitch(false).setLog2FileSwitch(false).setGlobalTag("TAGTAG");
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.

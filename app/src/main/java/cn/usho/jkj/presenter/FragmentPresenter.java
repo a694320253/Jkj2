@@ -15,4 +15,8 @@ public class FragmentPresenter extends BasePresenter<FragmentContract.View> impl
     public FragmentPresenter(FragmentContract.View mView) {
         super(mView);
     }
+
+    @Override
+    public void getData(String page) {
+    }
 }

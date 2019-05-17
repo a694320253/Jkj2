@@ -45,20 +45,27 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
         if (arguments != null) {
             mTitle = arguments.getString(BUNDLE_KEY_TITLE, "");
         }
-        LogUtils.v("TabFragment------"+"onCreate");
+        LogUtils.v("TabFragment------" + "onCreate");
     }
 
 
     @Override
     public void initData() {
-        mPresenter=new FragmentPresenter(this);
+        mPresenter = new FragmentPresenter(this);
 //        mSwipeRefreshLayout.setRefreshing(true);
-        LogUtils.v("TabFragment------"+"initData");
+        LogUtils.v("TabFragment------" + "initData");
+        refresh();
+    }
+
+    private void refresh() {
+//        mSwipeRefreshLayout.setRefreshing(true);
+        mPresenter.getData(String.valueOf(mNextRequestPage));
+
     }
 
     @Override
     protected void initView(View view) {
-        LogUtils.v("TabFragment------"+"initView");
+        LogUtils.v("TabFragment------" + "initView");
         mTv_title = view.findViewById(R.id.tv_title);
         mTv_title.setText(mTitle);
         mRecyclerView = view.findViewById(R.id.rv_list);
@@ -67,21 +74,22 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-               LogUtils.v("onRefresh----------");
+                LogUtils.v("onRefresh----------");
+                refresh();
                 new Handler().postDelayed(new Runnable() {//模拟耗时操作
                     @Override
                     public void run() {
                         mSwipeRefreshLayout.setRefreshing(false);//取消刷新
 
                     }
-                },2000);
+                }, 2000);
             }
         });
     }
 
     @Override
     protected int getLayoutId() {
-        LogUtils.v("TabFragment------"+"getLayoutId");
+        LogUtils.v("TabFragment------" + "getLayoutId");
         return R.layout.fragment_tab;
     }
 }

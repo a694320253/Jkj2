@@ -7,7 +7,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;
 
-import cn.usho.jkj.base.Status;
+import cn.usho.jkj.bean.Status;
 
 public class PullToRefreshAdapter extends BaseQuickAdapter<Status, BaseViewHolder> {
 

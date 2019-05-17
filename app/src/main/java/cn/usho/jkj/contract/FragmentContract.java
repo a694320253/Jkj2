@@ -15,5 +15,8 @@ public interface FragmentContract {
     }
 
     interface Presenter {
+
+
+        void getData(String page);
     }
 }

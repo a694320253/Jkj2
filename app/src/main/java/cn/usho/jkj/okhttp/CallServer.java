@@ -45,7 +45,7 @@ public class CallServer {
      * @param isLoading 是否显示进度条对话框
      * @param <T>
      */
-    public <T> void add(Context context, int what, Request<T> request, HttpListener<T> callback, boolean canCancle, boolean isLoading){
+    public <T> void add(Context context, int what, Request<String> request, HttpListener<T> callback, boolean canCancle, boolean isLoading){
         requestQueue.add(what,request,new HttpResponseListener<T>(context,request,callback,canCancle,isLoading));
     }
 

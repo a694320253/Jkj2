@@ -44,6 +44,6 @@ public class FragmentPresenter extends BasePresenter<FragmentContract.View> impl
             public void onFailed(int what, Response<String> response) {
 
             }
-        }, true, true);
+        }, true, false);
     }
 }

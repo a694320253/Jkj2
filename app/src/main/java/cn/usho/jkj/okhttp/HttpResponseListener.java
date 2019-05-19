@@ -3,13 +3,19 @@ package cn.usho.jkj.okhttp;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.util.Log;
 
+import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.yanzhenjie.nohttp.rest.OnResponseListener;
 import com.yanzhenjie.nohttp.rest.Request;
 import com.yanzhenjie.nohttp.rest.Response;
 
 import cn.usho.jkj.R;
+import cn.usho.jkj.bean.DataResultBean;
+import cn.usho.jkj.bean.ResultInfo;
 import cn.usho.jkj.view.customview.LoadingDialog;
 
 /**
@@ -71,8 +77,24 @@ public class HttpResponseListener<T> implements OnResponseListener {
     @Override
     public void onSucceed(int what, Response response) {
         //使用的是自己定义的接口,先判断接口对象是否为null,不为null,执行
+        LogUtils.i("服务器数据：" + response.get());
         if (callback != null) {
-            callback.onSucceed(what, response);
+            try {
+                DataResultBean data = GsonUtils.fromJson(response.get().toString(), DataResultBean.class);
+                if (data != null) {
+                    ResultInfo result = data.result;
+                    if (result != null && !TextUtils.isEmpty(result.message)) {
+                        ToastUtils.showShort(result.message);
+                    } else {
+                        callback.onSucceed(what, response);
+                    }
+                } else {
+                    ToastUtils.showShort("服务器出错了");
+                }
+            } catch (Exception e) {
+                ToastUtils.showShort("数据解析错误");
+            }
+
         }
     }
 

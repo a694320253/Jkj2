@@ -31,7 +31,8 @@ dependencies {
     implementation 'com.blankj:utilcode:1.23.7'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-25'
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-25'//没有使用特殊Header，可以不加这行
-    implementation 'com.zhouyou:rxeasyhttp:2.1.5'
+    implementation 'com.yanzhenjie.nohttp:nohttp:1.1.11'
+    implementation 'com.yanzhenjie.nohttp:okhttp:1.1.11'
 
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.6.3'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'

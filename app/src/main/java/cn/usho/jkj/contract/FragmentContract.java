@@ -1,5 +1,7 @@
 package cn.usho.jkj.contract;
 
+import android.content.Context;
+
 import cn.usho.jkj.base.BaseView;
 
 /**
@@ -17,6 +19,6 @@ public interface FragmentContract {
     interface Presenter {
 
 
-        void getData(String page);
+        void getData(String page, Context context);
     }
 }

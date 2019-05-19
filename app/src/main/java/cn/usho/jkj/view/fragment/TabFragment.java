@@ -59,7 +59,7 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
 
     private void refresh() {
 //        mSwipeRefreshLayout.setRefreshing(true);
-        mPresenter.getData(String.valueOf(mNextRequestPage));
+        mPresenter.getData(String.valueOf(mNextRequestPage),mContext);
 
     }
 

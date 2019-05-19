@@ -1,13 +1,17 @@
 package cn.usho.jkj.presenter;
 
-import com.blankj.utilcode.util.LogUtils;
-import com.zhouyou.http.EasyHttp;
+import android.content.Context;
+
+import com.yanzhenjie.nohttp.NoHttp;
+import com.yanzhenjie.nohttp.RequestMethod;
+import com.yanzhenjie.nohttp.rest.Request;
+import com.yanzhenjie.nohttp.rest.Response;
 
 import cn.usho.jkj.base.BasePresenter;
-import cn.usho.jkj.bean.DataResultBean;
-import cn.usho.jkj.bean.Status;
 import cn.usho.jkj.contract.FragmentContract;
-import cn.usho.jkj.network.DataResultCallback;
+import cn.usho.jkj.okhttp.CallServer;
+import cn.usho.jkj.okhttp.HttpListener;
+import cn.usho.jkj.utils.GlobalConstance;
 
 /**
  * 项目名称：cn.usho.jkj.presenter
@@ -23,28 +27,23 @@ public class FragmentPresenter extends BasePresenter<FragmentContract.View> impl
     }
 
     @Override
-    public void getData(final String page) {
-        EasyHttp.get("community")
-                .baseUrl("http://test.api.sosho.cn/")
-                .params("per_page", "15")
-                .params("sort", "influence_num")
-                .params("page", page)
-                .execute(new DataResultCallback<DataResultBean<Status>>() {
+    public void getData(final String page, Context context) {
+        Request<String> request = NoHttp.createStringRequest("http://test.api.sosho.cn/community", RequestMethod.GET);
+        request.addHeader(GlobalConstance.PARAM_KEY, GlobalConstance.PARAM_KEY_VALUE);
+        request.add("per_page", "15")
+                .add("sort", "influence_num")
+                .add("page", page);
+        CallServer callServerInstance = CallServer.getRequestInstance();
+        callServerInstance.add(context, 0, request, new HttpListener<String>() {
+            @Override
+            public void onSucceed(int what, Response<String> response) {
 
-                    @Override
-                    public void onSuccess(DataResultBean<DataResultBean<Status>> dataResultBean, String stringResult) {
-                        LogUtils.v("onSuccess--"+dataResultBean.items.size());
-                    }
+            }
 
-                    @Override
-                    public void onFail(Throwable t) {
-                        LogUtils.v("onFail--"+t.getMessage());
-                    }
+            @Override
+            public void onFailed(int what, Response<String> response) {
 
-                    @Override
-                    public void onError(String msg) {
-                        LogUtils.v("onError--"+msg);
-                    }
-                });
+            }
+        }, true, true);
     }
 }

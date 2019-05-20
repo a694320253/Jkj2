@@ -37,6 +37,11 @@ public  class BaseMvpActivity<T extends BasePresenter> extends BaseActivity impl
 
     }
 
+    @Override
+    public void onFinish(int what) {
+
+    }
+
 //    /**
 //     * 绑定生命周期 防止MVP内存泄漏
 //     *

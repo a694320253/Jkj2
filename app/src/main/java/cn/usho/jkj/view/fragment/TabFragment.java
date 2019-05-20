@@ -91,7 +91,7 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
 
     @Override
     public void getDataListSucce(DataResultBean<Status> data) {
-        mSwipeRefreshLayout.setRefreshing(false);
+//        mSwipeRefreshLayout.setRefreshing(false);
         if (data != null && data.items != null) {
             if (mNextRequestPage == 1) {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -103,9 +103,9 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
         }
     }
 
+
     @Override
-    public void onError(Throwable throwable) {
-        super.onError(throwable);
+    public void onFinish(int what) {
         mSwipeRefreshLayout.setRefreshing(false);
     }
 }

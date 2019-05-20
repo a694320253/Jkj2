@@ -11,4 +11,6 @@ public interface HttpListener<T> {
     void onSucceed(int what, Response<String> response);
     //请求网络失败回调的监听方法
     void onFailed(int what, Response<String> response);
+
+    void onFinish(int what);
 }

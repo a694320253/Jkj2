@@ -109,6 +109,7 @@ public class HttpResponseListener<T> implements OnResponseListener {
     //请求网络结束时回调,进度条对话框隐藏
     @Override
     public void onFinish(int what) {
+        if (callback!=null)callback.onFinish(what);
         if (isLoading && waitDialog != null && waitDialog.isShowing()) {
             waitDialog.dismiss();
 //            dialog.close();

@@ -35,4 +35,9 @@ public abstract class BaseMvpFragment<T extends BasePresenter>  extends BaseFrag
     public void onError(Throwable throwable) {
 
     }
+
+    @Override
+    public void onFinish(int what) {
+
+    }
 }

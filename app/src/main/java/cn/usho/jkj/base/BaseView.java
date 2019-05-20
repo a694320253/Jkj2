@@ -27,6 +27,8 @@ public interface BaseView {
      */
     void onError(Throwable throwable);
 
+
+    void onFinish(int what);
 //    /**
 //     * 绑定Android生命周期 防止RxJava内存泄漏
 //     *

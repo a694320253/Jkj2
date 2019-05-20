@@ -54,4 +54,9 @@ public class FragmentPresenter extends BasePresenter<FragmentContract.View> impl
     public void onFailed(int what, Response<String> response) {
         mView.onError(response.getException());
     }
+
+    @Override
+    public void onFinish(int what) {
+        mView.onFinish(what);
+    }
 }

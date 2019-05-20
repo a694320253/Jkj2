@@ -11,6 +11,8 @@ import com.blankj.utilcode.util.LogUtils;
 
 import cn.usho.jkj.R;
 import cn.usho.jkj.base.BaseMvpFragment;
+import cn.usho.jkj.bean.DataResultBean;
+import cn.usho.jkj.bean.Status;
 import cn.usho.jkj.contract.FragmentContract;
 import cn.usho.jkj.presenter.FragmentPresenter;
 import cn.usho.jkj.view.activity.SecondActivity;
@@ -66,5 +68,10 @@ public class MyFragment extends BaseMvpFragment<FragmentPresenter> implements Fr
     protected int getLayoutId() {
         LogUtils.v("MyFragment------"+"getLayoutId");
         return R.layout.fragment_tab;
+    }
+
+    @Override
+    public void getDataListSucce(DataResultBean<Status> data) {
+
     }
 }

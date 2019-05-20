@@ -3,7 +3,6 @@ package cn.usho.jkj.presenter;
 import android.content.Context;
 
 import com.blankj.utilcode.util.GsonUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.RequestMethod;
 import com.yanzhenjie.nohttp.rest.Request;
@@ -44,16 +43,15 @@ public class FragmentPresenter extends BasePresenter<FragmentContract.View> impl
     public void onSucceed(int what, Response<String> response) {
         switch (what) {
             case GlobalConstance.TASK_ONE:
-                DataResultBean<Status> data = GsonUtils.fromJson(response.get().toString(), GsonUtils.getType(DataResultBean.class, Status.class));
-                for (Status item : data.items) {
-                    LogUtils.v(item.getName());
-                }
+                DataResultBean<Status> data = GsonUtils.fromJson(response.get(), GsonUtils.getType(DataResultBean.class, Status.class));
+                mView.getDataListSucce(data);
                 break;
         }
 
     }
+
     @Override
     public void onFailed(int what, Response<String> response) {
-
+        mView.onError(response.getException());
     }
 }

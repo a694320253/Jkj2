@@ -2,9 +2,9 @@ package cn.usho.jkj.view.fragment;
 
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -14,6 +14,8 @@ import com.blankj.utilcode.util.LogUtils;
 import cn.usho.jkj.R;
 import cn.usho.jkj.adapter.PullToRefreshAdapter;
 import cn.usho.jkj.base.BaseMvpFragment;
+import cn.usho.jkj.bean.DataResultBean;
+import cn.usho.jkj.bean.Status;
 import cn.usho.jkj.contract.FragmentContract;
 import cn.usho.jkj.presenter.FragmentPresenter;
 
@@ -23,11 +25,11 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
     public static final String BUNDLE_KEY_TITLE = "key_title";
     private String mTitle;
     private TextView mTv_title;
-    private static final int PAGE_SIZE = 6;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private PullToRefreshAdapter mAdapter;
     private int mNextRequestPage = 1;
+    private PullToRefreshAdapter adapter;
 
     public static TabFragment newInstance(String mTitle) {
         Bundle bundle = new Bundle();
@@ -58,9 +60,11 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
     }
 
     private void refresh() {
-//        mSwipeRefreshLayout.setRefreshing(true);
-        mPresenter.getData(String.valueOf(mNextRequestPage),mContext);
-
+        if (!mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
+        mNextRequestPage = 1;
+        mPresenter.getData(String.valueOf(mNextRequestPage), mContext);
     }
 
     @Override
@@ -70,19 +74,11 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
         mTv_title.setText(mTitle);
         mRecyclerView = view.findViewById(R.id.rv_list);
         mSwipeRefreshLayout = view.findViewById(R.id.swipeLayout);
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 LogUtils.v("onRefresh----------");
                 refresh();
-                new Handler().postDelayed(new Runnable() {//模拟耗时操作
-                    @Override
-                    public void run() {
-                        mSwipeRefreshLayout.setRefreshing(false);//取消刷新
-
-                    }
-                }, 2000);
             }
         });
     }
@@ -91,5 +87,25 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
     protected int getLayoutId() {
         LogUtils.v("TabFragment------" + "getLayoutId");
         return R.layout.fragment_tab;
+    }
+
+    @Override
+    public void getDataListSucce(DataResultBean<Status> data) {
+        mSwipeRefreshLayout.setRefreshing(false);
+        if (data != null && data.items != null) {
+            if (mNextRequestPage == 1) {
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+                adapter=new PullToRefreshAdapter(R.layout.adapter_layout,data.items);
+                mRecyclerView.setAdapter(adapter);
+            } else if (adapter!=null){
+                adapter.addData(data.items);
+            }
+        }
+    }
+
+    @Override
+    public void onError(Throwable throwable) {
+        super.onError(throwable);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }

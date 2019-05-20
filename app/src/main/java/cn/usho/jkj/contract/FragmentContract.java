@@ -3,6 +3,8 @@ package cn.usho.jkj.contract;
 import android.content.Context;
 
 import cn.usho.jkj.base.BaseView;
+import cn.usho.jkj.bean.DataResultBean;
+import cn.usho.jkj.bean.Status;
 
 /**
  * 项目名称：cn.usho.jkj.contract
@@ -14,6 +16,7 @@ import cn.usho.jkj.base.BaseView;
 public interface FragmentContract {
 
     interface View  extends BaseView{
+        void  getDataListSucce(DataResultBean<Status> data);
     }
 
     interface Presenter {

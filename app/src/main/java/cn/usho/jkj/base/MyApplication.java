@@ -7,6 +7,8 @@ import com.squareup.leakcanary.LeakCanary;
 import com.yanzhenjie.nohttp.Logger;
 import com.yanzhenjie.nohttp.NoHttp;
 
+import cn.usho.jkj.BuildConfig;
+
 /**
  * 项目名称：cn.usho.jkj.bean
  * 类描述：
@@ -21,7 +23,7 @@ public class MyApplication extends Application {
         super.onCreate();
         NoHttp.initialize(this);
         Logger.setDebug(true);// 开启NoHttp的调试模式, 配置后可看到请求过程、日志和错误信息。
-        LogUtils.getConfig().setLogSwitch(false).setBorderSwitch(false).
+            LogUtils.getConfig().setLogSwitch(BuildConfig.DEBUG).setBorderSwitch(false).
                 setLogHeadSwitch(false).setLog2FileSwitch(false).setGlobalTag("USHO");
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.

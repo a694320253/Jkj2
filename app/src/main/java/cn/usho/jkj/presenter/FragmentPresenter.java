@@ -2,12 +2,16 @@ package cn.usho.jkj.presenter;
 
 import android.content.Context;
 
+import com.blankj.utilcode.util.GsonUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.RequestMethod;
 import com.yanzhenjie.nohttp.rest.Request;
 import com.yanzhenjie.nohttp.rest.Response;
 
 import cn.usho.jkj.base.BasePresenter;
+import cn.usho.jkj.bean.DataResultBean;
+import cn.usho.jkj.bean.Status;
 import cn.usho.jkj.contract.FragmentContract;
 import cn.usho.jkj.okhttp.CallServer;
 import cn.usho.jkj.okhttp.HttpListener;
@@ -20,7 +24,7 @@ import cn.usho.jkj.utils.GlobalConstance;
  * 日期：   2019/5/15 .
  * 公司： Usho Network Tech. Co., Ltd&lt;br&gt;
  */
-public class FragmentPresenter extends BasePresenter<FragmentContract.View> implements FragmentContract.Presenter {
+public class FragmentPresenter extends BasePresenter<FragmentContract.View> implements FragmentContract.Presenter, HttpListener<String> {
 
     public FragmentPresenter(FragmentContract.View mView) {
         super(mView);
@@ -28,22 +32,28 @@ public class FragmentPresenter extends BasePresenter<FragmentContract.View> impl
 
     @Override
     public void getData(final String page, Context context) {
-        Request<String> request = NoHttp.createStringRequest("http://test.api.sosho.cn/community", RequestMethod.GET);
-        request.addHeader(GlobalConstance.PARAM_KEY, GlobalConstance.PARAM_KEY_VALUE);
+        Request<String> request = NoHttp.createStringRequest(GlobalConstance.getBaseUrl(GlobalConstance.URL_COMMUNITY), RequestMethod.GET);
         request.add("per_page", "15")
                 .add("sort", "influence_num")
                 .add("page", page);
         CallServer callServerInstance = CallServer.getRequestInstance();
-        callServerInstance.add(context, 0, request, new HttpListener<String>() {
-            @Override
-            public void onSucceed(int what, Response<String> response) {
+        callServerInstance.add(context, GlobalConstance.TASK_ONE, request, this, true, false);
+    }
 
-            }
+    @Override
+    public void onSucceed(int what, Response<String> response) {
+        switch (what) {
+            case GlobalConstance.TASK_ONE:
+                DataResultBean<Status> data = GsonUtils.fromJson(response.get().toString(), GsonUtils.getType(DataResultBean.class, Status.class));
+                for (Status item : data.items) {
+                    LogUtils.v(item.getName());
+                }
+                break;
+        }
 
-            @Override
-            public void onFailed(int what, Response<String> response) {
+    }
+    @Override
+    public void onFailed(int what, Response<String> response) {
 
-            }
-        }, true, false);
     }
 }

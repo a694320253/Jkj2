@@ -2,6 +2,8 @@ package cn.usho.jkj.utils;
 
 import android.Manifest;
 
+import com.blankj.utilcode.util.SPUtils;
+
 /**
  * 项目名称：cn.usho.sosho.utils
  * 类描述：
@@ -10,6 +12,11 @@ import android.Manifest;
  * 公司： Usho Network Tech. Co., Ltd&lt;br&gt;
  */
 public class GlobalConstance {
+    public static final int TASK_ONE = 0; //第一个请求
+    public static final int TASK_TWO = 2; //第二个请求
+    public static final int TASK_THREE = 3; //第三个请求
+    public static final int TASK_FOURE = 4; //第四个请求
+
     public static final String PARAM_KEY = "appkey"; //请求key
     public static final String PARAM_KEY_VALUE = "android"; //请求key值
     public static final String URL_APP_INFO = "tool/version"; //获取app信息
@@ -816,21 +823,21 @@ public class GlobalConstance {
 //        return SERVER;
 //    }
 //
-//    public static String getBaseUrl(String mode) {
+    public static String getBaseUrl(String mode) {
 //        String SERVER = "https://api.sosho.cn/";  //master
-//        //String SERVER = "http://test.api.sosho.cn/"; //test
-//        //String SERVER = "http://dev.api.sosho.cn/"; //dev
-//        String api = (String) DataCacheUtils.get(BaseApplicationLike.getMyApplicationContext(), API_SERVER, "");
-//        if ("master".equals(api)) {
-//            SERVER = "https://api.sosho.cn/";
-//        } else if ("test".equals(api)) {
-//            SERVER = "http://test.api.sosho.cn/"; //test
-//        } else if ("dev".equals(api)) {
-//            SERVER = "http://dev.api.sosho.cn/"; //dev
-//        }
-//
-//        return SERVER + mode;
-//    }
+        String SERVER = "http://test.api.sosho.cn/"; //test
+        //String SERVER = "http://dev.api.sosho.cn/"; //dev
+        String api = SPUtils.getInstance().getString(API_SERVER);
+        if ("master".equals(api)) {
+            SERVER = "https://api.sosho.cn/";
+        } else if ("test".equals(api)) {
+            SERVER = "http://test.api.sosho.cn/"; //test
+        } else if ("dev".equals(api)) {
+            SERVER = "http://dev.api.sosho.cn/"; //dev
+        }
+
+        return SERVER + mode;
+    }
 //    public static String getBaseServerUrl(String mode) {
 //        String SERVER = "https://admin.sosho.cn/";  //master
 //        //String SERVER = "http://test.api.sosho.cn/"; //test

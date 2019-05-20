@@ -6,6 +6,8 @@ import com.yanzhenjie.nohttp.NoHttp;
 import com.yanzhenjie.nohttp.rest.Request;
 import com.yanzhenjie.nohttp.rest.RequestQueue;
 
+import cn.usho.jkj.utils.GlobalConstance;
+
 /**
  * Created by l on 2017/5/24.
  */
@@ -46,6 +48,7 @@ public class CallServer {
      * @param <T>
      */
     public <T> void add(Context context, int what, Request<String> request, HttpListener<T> callback, boolean canCancle, boolean isLoading){
+        request.addHeader(GlobalConstance.PARAM_KEY, GlobalConstance.PARAM_KEY_VALUE);//添加请求头
         requestQueue.add(what,request,new HttpResponseListener<T>(context,request,callback,canCancle,isLoading));
     }
 

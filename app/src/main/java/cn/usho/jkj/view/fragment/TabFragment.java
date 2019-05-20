@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
 
 import cn.usho.jkj.R;
 import cn.usho.jkj.adapter.PullToRefreshAdapter;
@@ -63,6 +64,9 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
         if (!mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(true);
         }
+        if (adapter!=null){
+            adapter.setEnableLoadMore(false);//这里的作用是防止下拉刷新的时候还可以上拉加载
+        }
         mNextRequestPage = 1;
         mPresenter.getData(String.valueOf(mNextRequestPage), mContext);
     }
@@ -96,6 +100,7 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
             if (mNextRequestPage == 1) {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
                 adapter = new PullToRefreshAdapter(R.layout.adapter_layout, data.items);
+                adapter.setLoadMoreView(new SimpleLoadMoreView());
                 adapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
                     @Override
                     public void onLoadMoreRequested() {
@@ -120,6 +125,7 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
     public void onFinish(int what) {
         mSwipeRefreshLayout.setRefreshing(false);
         if (adapter != null) {
+            adapter.setEnableLoadMore(true);
             adapter.loadMoreComplete();
         }
     }

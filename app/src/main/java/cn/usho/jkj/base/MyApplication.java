@@ -7,6 +7,7 @@ import com.squareup.leakcanary.LeakCanary;
 import com.yanzhenjie.nohttp.InitializationConfig;
 import com.yanzhenjie.nohttp.Logger;
 import com.yanzhenjie.nohttp.NoHttp;
+import com.yanzhenjie.nohttp.OkHttpNetworkExecutor;
 
 import cn.usho.jkj.BuildConfig;
 import cn.usho.jkj.utils.GlobalConstance;
@@ -28,6 +29,7 @@ public class MyApplication extends Application {
                 .connectionTimeout(30 * 1000)
                 // 全局等待服务器响应超时时间，单位毫秒，默认10s。
                 .readTimeout(30 * 1000)
+                .networkExecutor(new OkHttpNetworkExecutor())
                 .addHeader(GlobalConstance.PARAM_KEY, GlobalConstance.PARAM_KEY_VALUE)
                 .build();
         NoHttp.initialize(config);

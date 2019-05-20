@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import cn.usho.jkj.R;
 import cn.usho.jkj.adapter.PullToRefreshAdapter;
@@ -27,7 +28,6 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
     private TextView mTv_title;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private PullToRefreshAdapter mAdapter;
     private int mNextRequestPage = 1;
     private PullToRefreshAdapter adapter;
 
@@ -95,17 +95,32 @@ public class TabFragment extends BaseMvpFragment<FragmentPresenter> implements F
         if (data != null && data.items != null) {
             if (mNextRequestPage == 1) {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-                adapter=new PullToRefreshAdapter(R.layout.adapter_layout,data.items);
+                adapter = new PullToRefreshAdapter(R.layout.adapter_layout, data.items);
+                adapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+                    @Override
+                    public void onLoadMoreRequested() {
+                        loadMore();
+                    }
+                });
+//                adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
                 mRecyclerView.setAdapter(adapter);
-            } else if (adapter!=null){
+            } else if (adapter != null) {
                 adapter.addData(data.items);
             }
         }
+    }
+
+    private void loadMore() {
+        mNextRequestPage++;
+        mPresenter.getData(String.valueOf(mNextRequestPage), mContext);
     }
 
 
     @Override
     public void onFinish(int what) {
         mSwipeRefreshLayout.setRefreshing(false);
+        if (adapter != null) {
+            adapter.loadMoreComplete();
+        }
     }
 }

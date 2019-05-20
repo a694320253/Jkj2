@@ -1,21 +1,25 @@
 package cn.usho.jkj.view.fragment;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
 
 import cn.usho.jkj.R;
+import cn.usho.jkj.adapter.PullToRefreshAdapter;
 import cn.usho.jkj.base.BaseMvpFragment;
 import cn.usho.jkj.bean.DataResultBean;
 import cn.usho.jkj.bean.Status;
 import cn.usho.jkj.contract.FragmentContract;
 import cn.usho.jkj.presenter.FragmentPresenter;
-import cn.usho.jkj.view.activity.SecondActivity;
 
 
 public class ActivityFragment extends BaseMvpFragment<FragmentPresenter> implements FragmentContract.View {
@@ -24,7 +28,10 @@ public class ActivityFragment extends BaseMvpFragment<FragmentPresenter> impleme
     private String mTitle;
     private TextView mTv_title;
 
-
+    private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private int mNextRequestPage = 1;
+    private PullToRefreshAdapter adapter;
     public static ActivityFragment newInstance(String mTitle) {
         Bundle bundle = new Bundle();
         bundle.putString(BUNDLE_KEY_TITLE, mTitle);
@@ -49,17 +56,30 @@ public class ActivityFragment extends BaseMvpFragment<FragmentPresenter> impleme
     public void initData() {
         mPresenter=new FragmentPresenter(this);
         LogUtils.v("ActivityFragment------"+"initData");
+        refresh();
     }
-
+    private void refresh() {
+        if (!mSwipeRefreshLayout.isRefreshing()) {
+            mSwipeRefreshLayout.setRefreshing(true);
+        }
+        if (adapter!=null){
+            adapter.setEnableLoadMore(false);//这里的作用是防止下拉刷新的时候还可以上拉加载
+        }
+        mNextRequestPage = 1;
+        mPresenter.getData(String.valueOf(mNextRequestPage), mContext);
+    }
     @Override
     protected void initView(View view) {
         LogUtils.v("ActivityFragment------"+"initView");
         mTv_title = view.findViewById(R.id.tv_title);
         mTv_title.setText(mTitle);
-        mTv_title.setOnClickListener(new View.OnClickListener() {
+        mRecyclerView = view.findViewById(R.id.rv_list);
+        mSwipeRefreshLayout = view.findViewById(R.id.swipeLayout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), SecondActivity.class));
+            public void onRefresh() {
+                LogUtils.v("onRefresh----------");
+                refresh();
             }
         });
     }
@@ -72,6 +92,38 @@ public class ActivityFragment extends BaseMvpFragment<FragmentPresenter> impleme
 
     @Override
     public void getDataListSucce(DataResultBean<Status> data) {
+//        mSwipeRefreshLayout.setRefreshing(false);
+        if (data != null && data.items != null) {
+            if (mNextRequestPage == 1) {
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+                adapter = new PullToRefreshAdapter(R.layout.adapter_layout, data.items);
+                adapter.setLoadMoreView(new SimpleLoadMoreView());
+                adapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+                    @Override
+                    public void onLoadMoreRequested() {
+                        loadMore();
+                    }
+                });
+//                adapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
+                mRecyclerView.setAdapter(adapter);
+            } else if (adapter != null) {
+                adapter.addData(data.items);
+            }
+        }
+    }
 
+    private void loadMore() {
+        mNextRequestPage++;
+        mPresenter.getData(String.valueOf(mNextRequestPage), mContext);
+    }
+
+
+    @Override
+    public void onFinish(int what) {
+        mSwipeRefreshLayout.setRefreshing(false);
+        if (adapter != null) {
+            adapter.setEnableLoadMore(true);
+            adapter.loadMoreComplete();
+        }
     }
 }

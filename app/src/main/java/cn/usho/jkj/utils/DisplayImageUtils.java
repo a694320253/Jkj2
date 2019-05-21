@@ -20,71 +20,71 @@ public class DisplayImageUtils {
 
 
     public static void displayImageAsBitmapNormal(Context context ,String url, ImageView view, int placeholder) {
-        Glide.with(context)
-                .asBitmap()
-                .load(url)
-                .placeholder(placeholder)
-                .error(placeholder)
-                .into(view);
+//        Glide.with(context)
+//                .asBitmap()
+//                .load(url)
+//                .placeholder(placeholder)
+//                .error(placeholder)
+//                .into(view);
     }
 
     public static void displayImageAsBitmap(Context context, String url, ImageView view, int placeholder) {
 
-        Glide.with(context)
-                .asBitmap()
-                .load(url)
-                .placeholder(placeholder)
-                .error(placeholder)
-                .centerCrop()
-                .into(view);
+//        Glide.with(context)
+//                .asBitmap()
+//                .load(url)
+//                .placeholder(placeholder)
+//                .error(placeholder)
+//                .centerCrop()
+//                .into(view);
     }
 
 
     public static void displayImage(Context context, String url, ImageView view, int placeholder) {
 
-        Glide.with(context)
-                .asGif()
-                .load(url)
-                .placeholder(placeholder)
-                .error(placeholder)
-                .centerCrop()
-                .into(view);
+//        Glide.with(context)
+//                .asGif()
+//                .load(url)
+//                .placeholder(placeholder)
+//                .error(placeholder)
+//                .centerCrop()
+//                .into(view);
     }
 
     public static void displayAvatarPicture(Context context, String url, ImageView view) {
-        Glide.with(context)
-                .asBitmap()
-                .load(url)
-                .placeholder(R.drawable.avatar_placeholder)
-                .error(R.drawable.avatar_placeholder)
-                .transform(new CircleCrop())
-                .centerCrop()
-                .into(view);
+//        Glide.with(context)
+//                .asBitmap()
+//                .load(url)
+//                .placeholder(R.drawable.avatar_placeholder)
+//                .error(R.drawable.avatar_placeholder)
+//                .transform(new CircleCrop())
+//                .centerCrop()
+//                .into(view);
     }
 
 
     public static void displayCirclePicture(Context context, String url, ImageView view) {
 
-        Glide.with(context)
-                .asBitmap()
-                .load(url)
-                .placeholder(R.drawable.circle_pic_placeholder)
-                .error(R.drawable.circle_pic_placeholder)
-                .transform(new CircleCrop())
-                .centerCrop()
-                .into(view);
+//        Glide.with(context)
+//                .asBitmap()
+//                .load(url)
+//                .placeholder(R.drawable.circle_pic_placeholder)
+//                .error(R.drawable.circle_pic_placeholder)
+//                .transform(new CircleCrop())
+//                .centerCrop()
+//                .into(view);
     }
 
 
     public static void displayNormalPic(Context context, String url, ImageView view) {
 
-        Glide.with(context)
-                .asBitmap()
-                .load(url)
-                .placeholder(R.drawable.pic_load_fail2)
-                .error(R.drawable.pic_load_fail2)
-                .centerCrop()
-                .into(view);
+//        Glide.with(context)
+//                .asBitmap()
+//                .load(url)
+//                .placeholder(R.drawable.pic_load_fail2)
+//                .error(R.drawable.pic_load_fail2)
+//                .centerCrop()
+//                .into(view);
     }
 
 

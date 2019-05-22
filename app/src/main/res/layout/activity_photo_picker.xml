@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#191919">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/gv_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+             />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/bottom_tab_bar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:layout_alignParentBottom="true"
+                android:background="#BB000000">
+
+                <LinearLayout
+                    android:id="@+id/ll_folder_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/folder_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingBottom="@dimen/p_10_dp"
+                        android:paddingStart="@dimen/p_10_dp"
+                        android:paddingTop="@dimen/p_10_dp"
+                        android:text="@string/all_picture"
+                        android:textColor="@color/folder_name_color_selector"
+                        android:textSize="@dimen/text_16_sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:src="@drawable/ic_white_triangle" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/photo_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/p_12_dp"
+                    android:text="@string/photo_zero_default_text"
+                    android:textColor="#A9ffffff"
+                    android:textSize="@dimen/text_16_sp" />
+            </RelativeLayout>
+
+            <ViewStub
+                android:id="@+id/btm_folder_stub"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/bottom_tab_bar"
+                android:layout="@layout/layout_folder_list" />
+        </RelativeLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

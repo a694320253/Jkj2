@@ -22,6 +22,7 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.utils.CoordinateConverter;
+import com.blankj.utilcode.util.TimeUtils;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
@@ -29,23 +30,26 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.permissions.RxPermissions;
 import com.luck.picture.lib.tools.PictureFileUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.usho.jkj.R;
 import cn.usho.jkj.adapter.ListAdapter;
+import cn.usho.jkj.utils.LocationUtils;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
-    private Button btn;
+    private Button btn,upbtn;
     private List<LocalMedia> selectList = new ArrayList<>();
     private RecyclerView recyclerView;
     private ListAdapter adapter;
     private GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
     private int index = 0;
-private ProgressBar bar;
+    private ProgressBar bar;
+    protected static final int REQUEST_SELECT_PHOTO = 99;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,8 +58,15 @@ private ProgressBar bar;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ListAdapter(R.layout.list_item, selectList);
         recyclerView.setAdapter(adapter);
-        bar=findViewById(R.id.bar);
+        bar = findViewById(R.id.bar);
         btn = findViewById(R.id.btn);
+        upbtn = findViewById(R.id.upbtn);
+        upbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestSelectPhoto();
+            }
+        });
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,6 +77,14 @@ private ProgressBar bar;
         // 初始化搜索模块，注册事件监听
         mSearch = GeoCoder.newInstance();
 //        mSearch.setOnGetGeoCodeResultListener(this);
+    }
+
+    private void requestSelectPhoto() {
+        Intent intent = new Intent(this, PhotoPickerActivity.class);
+//        if (!TextUtils.isEmpty(action)) intent.setAction(action);
+//        if (mode != -1) intent.putExtra(GlobalConstance.ACTION_PHOTO_SELECT_MODE, mode);
+//        if (maxNum != -1) intent.putExtra(GlobalConstance.ACTION_PHOTO_MAX_NUM, maxNum);
+        startActivityForResult(intent, REQUEST_SELECT_PHOTO);
     }
 
     private void requestPermissions() {
@@ -117,10 +136,13 @@ private ProgressBar bar;
                     for (int i = 0; i < selectList.size(); i++) {
                         LocalMedia media = selectList.get(i);
                         String path = media.getPath();
-                        Log.i("图片-----》", path);
 //                        media.setPictureType(getInfo(path));
+                        File file = new File(path);
+                        long modifieTime = file.lastModified();
+                        String watermarkTime = TimeUtils.millis2String(modifieTime);
+                        Log.i("图片-----》", path + "  --------->" + watermarkTime);
                     }
-                    index=0;
+                    index = 0;
                     getInfo();
 //                    adapter.setNewData(selectList);
                     break;
@@ -132,7 +154,7 @@ private ProgressBar bar;
         try {
             bar.setVisibility(View.VISIBLE);
             final LocalMedia localMedia = selectList.get(index);
-            String path=localMedia.getPath();
+            String path = localMedia.getPath();
             final ExifInterface exifInterface = new ExifInterface(path);
             String latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             final String latitude_ref = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
@@ -140,7 +162,9 @@ private ProgressBar bar;
             final String longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
             final double lat = convertRationalLatLonToFloat(latitude, latitude_ref);
             final double lon = convertRationalLatLonToFloat(longitude, longitude_ref);
-//            String streetstreet = LocationUtils.getStreet(lat, lon);
+            String streetstreet = LocationUtils.getStreet(lat, lon);
+            String locality = LocationUtils.getLocality(lat, lon);
+            Log.i("图片-----》", locality + "  streetstreet--" + streetstreet);
             mSearch.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
                 @Override
                 public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
@@ -156,7 +180,7 @@ private ProgressBar bar;
                     } else {
                         ReverseGeoCodeResult.AddressComponent addressDetail = reverseGeoCodeResult.getAddressDetail();
                         if (!TextUtils.isEmpty(addressDetail.province) && !TextUtils.isEmpty(addressDetail.city) && !TextUtils.isEmpty(addressDetail.district)) {
-                            Log.i("getAddress", addressDetail.province + addressDetail.city + addressDetail.district);
+                            Log.i("图片", reverseGeoCodeResult.getAddress());
                             streetstreet = addressDetail.province + addressDetail.city + addressDetail.district;
                         } else {
                             Log.i("getAddress", "null");
@@ -200,11 +224,11 @@ private ProgressBar bar;
                             .append("GPS纬度 = " + lat + "\n")
                             .append("GPS经度 = " + lon + "\n");
                     localMedia.setPictureType(stringBuilder.toString());
-                    selectList.set(index,localMedia);
+                    selectList.set(index, localMedia);
                     index++;
-                    if (index<selectList.size()){
+                    if (index < selectList.size()) {
                         getInfo();
-                    }else if (index==selectList.size()){
+                    } else if (index == selectList.size()) {
                         bar.setVisibility(View.GONE);
                         adapter.setNewData(selectList);
                     }
@@ -266,6 +290,7 @@ private ProgressBar bar;
             ReverseGeoCodeResult.AddressComponent addressDetail = reverseGeoCodeResult.getAddressDetail();
             if (!TextUtils.isEmpty(addressDetail.province) && !TextUtils.isEmpty(addressDetail.city) && !TextUtils.isEmpty(addressDetail.district)) {
                 Log.i("getAddress", addressDetail.province + addressDetail.city + addressDetail.district);
+                Log.i("图片", reverseGeoCodeResult.getAddress());
             } else {
                 Log.i("getAddress", "null");
             }

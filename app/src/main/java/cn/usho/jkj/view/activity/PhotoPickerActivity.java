@@ -9,10 +9,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -32,32 +35,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import butterknife.BindView;
-import cn.usho.sosho.R;
-import cn.usho.sosho.adapter.FolderAdapter;
-import cn.usho.sosho.adapter.PhotoAdapter;
-import cn.usho.sosho.application.BaseApplicationLike;
-import cn.usho.sosho.base.BaseActivity;
-import cn.usho.sosho.base.RecycleBaseAdapter;
-import cn.usho.sosho.model.PhotoFolder;
-import cn.usho.sosho.model.PhotoModel;
-import cn.usho.sosho.utils.GlobalConstance;
-import cn.usho.sosho.utils.OtherUtils;
-import cn.usho.sosho.utils.PhotoUtils;
-import cn.usho.sosho.utils.ToastUtils;
+import cn.usho.jkj.R;
+import cn.usho.jkj.adapter.FolderAdapter;
+import cn.usho.jkj.adapter.ListAdapter;
+import cn.usho.jkj.adapter.PhotoAdapter;
+import cn.usho.jkj.base.MyApplication;
+import cn.usho.jkj.base.RecycleBaseAdapter;
+import cn.usho.jkj.bean.PhotoFolder;
+import cn.usho.jkj.bean.PhotoModel;
+import cn.usho.jkj.utils.GlobalConstance;
+import cn.usho.jkj.utils.OtherUtils;
+import cn.usho.jkj.utils.PhotoUtils;
+import cn.usho.jkj.utils.ToastUtils;
 
 /**
  * 手机图片选择页面
  */
 public class PhotoPickerActivity extends AppCompatActivity {
 
-    @BindView(R.id.gv_photo)
     RecyclerView mGridView;
-    @BindView(R.id.ll_folder_container)
     LinearLayout llFolderContainer;
-    @BindView(R.id.photo_num)
     TextView tvPhotoNum;
-    @BindView(R.id.btm_folder_stub)
     ViewStub btmFolderStub;
     private ProgressDialog mProgressDialog;
     private Map<String, PhotoFolder> mFolderMap;
@@ -109,22 +107,24 @@ public class PhotoPickerActivity extends AppCompatActivity {
     private String action;
 
     @Override
-    protected int initLayout() {
-        return R.layout.activity_photo_picker;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_photo_picker);
+        initView();
+        initData();
     }
 
-    @Override
-    protected void updateTitle() {
-        setTitleBarStyle(getString(R.string.picker_photo_title), getString(R.string.confirm_text));
-    }
 
-    @Override
     protected void initView() {
+        mGridView=findViewById(R.id.gv_photo);
+        llFolderContainer=findViewById(R.id.ll_folder_container);
+        tvPhotoNum=findViewById(R.id.photo_num);
+        btmFolderStub=findViewById(R.id.btm_folder_stub);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         mGridView.setLayoutManager(gridLayoutManager);
+
     }
 
-    @Override
     protected void initData() {
         Intent intent = getIntent();
         action = intent.getAction();
@@ -135,32 +135,8 @@ public class PhotoPickerActivity extends AppCompatActivity {
         myAsyncTask.execute();
     }
 
-    @Override
-    protected void initListener() {
-        titleBar.setTvRightOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mSelectList.isEmpty()) {
-                    ToastUtils.showToast(getApplicationContext(), getString(R.string.select_photo_pls_text));
-                } else {
-                    returnData();
-                }
-            }
-        });
 
-        titleBar.setIvLeftOnclickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goBack();
-            }
-        });
-    }
 
-    @NonNull
-    @Override
-    protected BaseActivity init2Manage() {
-        return this;
-    }
 
     /**
      * 获取照片的异步任务
@@ -181,7 +157,7 @@ public class PhotoPickerActivity extends AppCompatActivity {
 
         @Override
         protected Object doInBackground(Object[] params) {
-            reference.get().mFolderMap = PhotoUtils.getPhotos(BaseApplicationLike.getMyApplicationContext());
+            reference.get().mFolderMap = PhotoUtils.getPhotos(MyApplication.getContext());
             return null;
         }
 
@@ -272,7 +248,7 @@ public class PhotoPickerActivity extends AppCompatActivity {
         if (!mPhotoLists.isEmpty()) {
             mPhotoLists.get(0).isShowSelector = isShowSelector;
         }
-        titleBar.isHideTvRightByInvisible(isShowSelector);
+//        titleBar.isHideTvRightByInvisible(isShowSelector);
     }
 
     private void initAnimation(View dimLayout) {
@@ -392,16 +368,16 @@ public class PhotoPickerActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * 返回选择图片的路径
-     */
+//    /**
+//     * 返回选择图片的路径
+//     */
     private void returnData() {
         // 返回已选择的图片数据
         Intent data = new Intent();
         if (!TextUtils.isEmpty(action)) data.setAction(action);
         data.putStringArrayListExtra(GlobalConstance.PHOTO_RESULT_LIST_KEY, mSelectList);
         setResult(RESULT_OK, data);
-        goBack();
+        finish();
     }
 
     /**
@@ -475,10 +451,20 @@ public class PhotoPickerActivity extends AppCompatActivity {
     }
 
     @Override
-    public void releaseData() {
-        mPhotoLists = releaseList(mPhotoLists);
-        mSelectList = releaseList(mSelectList);
-        photoList = releaseList(photoList);
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPhotoLists!=null) {
+            mPhotoLists.clear();
+            mPhotoLists=null;
+        }
+        if (mSelectList!=null) {
+            mSelectList.clear();
+            mSelectList=null;
+        }
+        if (photoList!=null) {
+            photoList.clear();
+            photoList=null;
+        }
         if (mFolderMap != null) {
             mFolderMap.clear();
             mFolderMap = null;
@@ -494,4 +480,5 @@ public class PhotoPickerActivity extends AppCompatActivity {
             outAnimatorSet.cancel();
         }
     }
+
 }

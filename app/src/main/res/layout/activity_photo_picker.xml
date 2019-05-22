@@ -3,7 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/h_48_dp"
+        android:background="@color/app_top_color">
 
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:text="相册"
+            android:textSize="@dimen/text_16_sp" />
+    </RelativeLayout>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

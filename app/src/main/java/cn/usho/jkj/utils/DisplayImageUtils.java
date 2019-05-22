@@ -30,13 +30,13 @@ public class DisplayImageUtils {
 
     public static void displayImageAsBitmap(Context context, String url, ImageView view, int placeholder) {
 
-//        Glide.with(context)
-//                .asBitmap()
-//                .load(url)
+        Glide.with(context)
+                .asBitmap()
+                .load(url)
 //                .placeholder(placeholder)
 //                .error(placeholder)
 //                .centerCrop()
-//                .into(view);
+                .into(view);
     }
 
 

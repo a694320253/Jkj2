@@ -1,6 +1,7 @@
 package cn.usho.jkj.base;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
@@ -22,10 +23,11 @@ import cn.usho.jkj.utils.GlobalConstance;
  * 公司： Usho Network Tech. Co., Ltd&lt;br&gt;
  */
 public class MyApplication extends Application {
-
+private static Context context;
     @Override
     public void onCreate() {
         super.onCreate();
+        context=this;
         SDKInitializer.initialize(this);
         SDKInitializer.setCoordType(CoordType.GCJ02);
         InitializationConfig config = InitializationConfig.newBuilder(this)
@@ -46,5 +48,9 @@ public class MyApplication extends Application {
             return;
         }
         LeakCanary.install(this);
+    }
+
+    public static Context getContext() {
+        return context;
     }
 }

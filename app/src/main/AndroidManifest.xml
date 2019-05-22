@@ -41,6 +41,7 @@
         </activity>
         <activity android:name=".view.activity.TestActivity" />
         <activity android:name=".view.activity.SecondActivity" />
+        <activity android:name=".view.activity.PhotoPickerActivity" />
         <activity android:name=".view.activity.MainActivity"></activity>
     </application>
 

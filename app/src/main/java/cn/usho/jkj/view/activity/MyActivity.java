@@ -1,42 +1,116 @@
-package cn.usho.jkj.adapter;
+package cn.usho.jkj.view.activity;
 
+import android.Manifest;
+import android.content.Intent;
 import android.media.ExifInterface;
-import android.support.annotation.Nullable;
-import android.widget.ImageView;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.config.PictureConfig;
+import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.permissions.RxPermissions;
+import com.luck.picture.lib.tools.PictureFileUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.usho.jkj.R;
+import cn.usho.jkj.adapter.ListAdapter;
 import cn.usho.jkj.utils.LocationUtils;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
-/**
- * 项目名称：cn.usho.jkj.adapter
- * 类描述：
- * 作者：   admin .
- * 日期：   2019/5/20 .
- * 公司： Usho Network Tech. Co., Ltd&lt;br&gt;
- */
-public class ListAdapter extends BaseQuickAdapter<LocalMedia, BaseViewHolder> {
+public class MyActivity extends AppCompatActivity {
+    private Button btn;
+    private List<LocalMedia> selectList = new ArrayList<>();
+    private RecyclerView recyclerView;
+private ListAdapter adapter;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_my);
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter=new ListAdapter(R.layout.list_item,selectList);
+        recyclerView.setAdapter(adapter);
+        btn = findViewById(R.id.btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestPermissions();
+            }
+        });
+    }
 
-    public ListAdapter(int layoutResId, @Nullable List<LocalMedia> data) {
-        super(layoutResId, data);
+    private void requestPermissions() {
+        // 清空图片缓存，包括裁剪、压缩后的图片 注意:必须要在上传完成后调用 必须要获取权限
+        RxPermissions permissions = new RxPermissions(this);
+        permissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Observer<Boolean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+                if (aBoolean) {
+                    PictureSelector.create(MyActivity.this)
+                            .openGallery(PictureMimeType.ofImage())
+                            .maxSelectNum(9)
+                            .minSelectNum(1)
+                            .isCamera(false)// 是否显示拍照按钮
+                            .forResult(PictureConfig.CHOOSE_REQUEST);
+                } else {
+                    Toast.makeText(MyActivity.this,
+                            getString(R.string.picture_jurisdiction), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, LocalMedia item) {
-        helper.setText(R.id.textview, getInfo(item.getPath()));
-        Glide.with(mContext).load(item.getPath()).into((ImageView) helper.getView(R.id.image));
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case PictureConfig.CHOOSE_REQUEST:
+                    // 图片选择结果回调
+                    selectList = PictureSelector.obtainMultipleResult(data);
+                    // 例如 LocalMedia 里面返回三种path
+                    // 1.media.getPath(); 为原图path
+                    // 2.media.getCutPath();为裁剪后path，需判断media.isCut();是否为true
+                    // 3.media.getCompressPath();为压缩后path，需判断media.isCompressed();是否为true
+                    // 如果裁剪并压缩了，已取压缩路径为准，因为是先裁剪后压缩的
+                    for (LocalMedia media : selectList) {
+                        String path = media.getPath();
+                        Log.i("图片-----》", path);
+                    }
+                    adapter.setNewData(selectList);
+                    break;
+            }
+        }
     }
+
     /**
      * @param path 图片路径
      */
-    private String getInfo(String path) {
+    private void getInfo(String path) {
         try {
 
             ExifInterface exifInterface = new ExifInterface(path);
@@ -68,13 +142,13 @@ public class ListAdapter extends BaseQuickAdapter<LocalMedia, BaseViewHolder> {
             //转换经纬度格式
             double lat = score2dimensionality(latitude);
             double lon = score2dimensionality(longitude);
-//            String locality = LocationUtils.getLocality(lat, lon);
+            String locality = LocationUtils.getLocality(lat, lon);
             String streetstreet = LocationUtils.getStreet(lat, lon);
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("光圈 = " + guangquan + "\n")
                     .append("时间 = " + shijain + "\n")
-//                    .append("位置 = " + locality + "\n")
-                    .append("位置 = " + streetstreet + "\n")
+                    .append("位置 = " + locality + "\n")
+                    .append("街道 = " + streetstreet + "\n")
                     .append("曝光时长 = " + baoguangshijian + "\n")
                     .append("焦距 = " + jiaoju + "\n")
                     .append("长 = " + chang + "\n")
@@ -101,12 +175,12 @@ public class ListAdapter extends BaseQuickAdapter<LocalMedia, BaseViewHolder> {
 //             * 就可以用这个坐标通过百度SDK 去获取该经纬度的地址描述
 //             */
 //            double[] wgs2bd = GpsUtil.wgs2bd(lat, lon);
-            return stringBuilder.toString();
+
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "";
+
     }
 
     /**
@@ -134,4 +208,9 @@ public class ListAdapter extends BaseQuickAdapter<LocalMedia, BaseViewHolder> {
         return dimensionality;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PictureFileUtils.deleteCacheDirFile(MyActivity.this);
+    }
 }

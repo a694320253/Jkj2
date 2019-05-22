@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
+
     <!-- 粗略的位置权限 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <!-- 精确的位置权限 -->
@@ -23,13 +24,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.activity.TestActivity">
+        <activity android:name=".view.activity.MyActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.activity.TestActivity" />
         <activity android:name=".view.activity.SecondActivity" />
         <activity android:name=".view.activity.MainActivity"></activity>
     </application>

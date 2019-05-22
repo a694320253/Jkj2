@@ -2,6 +2,8 @@ package cn.usho.jkj.base;
 
 import android.app.Application;
 
+import com.baidu.mapapi.CoordType;
+import com.baidu.mapapi.SDKInitializer;
 import com.blankj.utilcode.util.LogUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.yanzhenjie.nohttp.InitializationConfig;
@@ -24,6 +26,8 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        SDKInitializer.initialize(this);
+        SDKInitializer.setCoordType(CoordType.GCJ02);
         InitializationConfig config = InitializationConfig.newBuilder(this)
                 // 全局连接服务器超时时间，单位毫秒，默认10s。
                 .connectionTimeout(30 * 1000)

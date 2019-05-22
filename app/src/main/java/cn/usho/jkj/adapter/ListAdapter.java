@@ -2,6 +2,7 @@ package cn.usho.jkj.adapter;
 
 import android.media.ExifInterface;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -30,9 +31,10 @@ public class ListAdapter extends BaseQuickAdapter<LocalMedia, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, LocalMedia item) {
-        helper.setText(R.id.textview, getInfo(item.getPath()));
+        helper.setText(R.id.textview,item.getPictureType());
         Glide.with(mContext).load(item.getPath()).into((ImageView) helper.getView(R.id.image));
     }
+
     /**
      * @param path 图片路径
      */
@@ -66,8 +68,8 @@ public class ListAdapter extends BaseQuickAdapter<LocalMedia, BaseViewHolder> {
                     .TAG_GPS_PROCESSING_METHOD);
 
             //转换经纬度格式
-            double lat = score2dimensionality(latitude);
-            double lon = score2dimensionality(longitude);
+            double lat = convertRationalLatLonToFloat(latitude, latitude_ref);
+            double lon = convertRationalLatLonToFloat(longitude, longitude_ref);
 //            String locality = LocationUtils.getLocality(lat, lon);
             String streetstreet = LocationUtils.getStreet(lat, lon);
             StringBuilder stringBuilder = new StringBuilder();
@@ -134,4 +136,31 @@ public class ListAdapter extends BaseQuickAdapter<LocalMedia, BaseViewHolder> {
         return dimensionality;
     }
 
+    private static double convertRationalLatLonToFloat(String rationalString, String ref) {
+        if (!TextUtils.isEmpty(rationalString) && !TextUtils.isEmpty(ref)) {
+            String[] parts = rationalString.split(",");
+
+            String[] pair;
+            pair = parts[0].split("/");
+            double degrees = Double.parseDouble(pair[0].trim())
+                    / Double.parseDouble(pair[1].trim());
+
+            pair = parts[1].split("/");
+            double minutes = Double.parseDouble(pair[0].trim())
+                    / Double.parseDouble(pair[1].trim());
+
+            pair = parts[2].split("/");
+            double seconds = Double.parseDouble(pair[0].trim())
+                    / Double.parseDouble(pair[1].trim());
+
+            double result = degrees + (minutes / 60.0) + (seconds / 3600.0);
+            if ((ref.equals("S") || ref.equals("W"))) {
+                return -result;
+            }
+            return result;
+        } else {
+            return 0;
+        }
+
+    }
 }

@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.baidu.mapapi.model.LatLng;
@@ -34,7 +35,6 @@ import java.util.List;
 
 import cn.usho.jkj.R;
 import cn.usho.jkj.adapter.ListAdapter;
-import cn.usho.jkj.utils.LocationUtils;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
@@ -44,7 +44,8 @@ public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResult
     private RecyclerView recyclerView;
     private ListAdapter adapter;
     private GeoCoder mSearch = null; // 搜索模块，也可去掉地图模块独立使用
-
+    private int index = 0;
+private ProgressBar bar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +54,7 @@ public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResult
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ListAdapter(R.layout.list_item, selectList);
         recyclerView.setAdapter(adapter);
+        bar=findViewById(R.id.bar);
         btn = findViewById(R.id.btn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +65,7 @@ public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResult
 
         // 初始化搜索模块，注册事件监听
         mSearch = GeoCoder.newInstance();
-        mSearch.setOnGetGeoCodeResultListener(this);
+//        mSearch.setOnGetGeoCodeResultListener(this);
     }
 
     private void requestPermissions() {
@@ -116,96 +118,104 @@ public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResult
                         LocalMedia media = selectList.get(i);
                         String path = media.getPath();
                         Log.i("图片-----》", path);
-                        media.setPictureType(getInfo(path));
+//                        media.setPictureType(getInfo(path));
                     }
-                    adapter.setNewData(selectList);
+                    index=0;
+                    getInfo();
+//                    adapter.setNewData(selectList);
                     break;
             }
         }
     }
 
-    /**
-     * @param path 图片路径
-     */
-    private String getInfo(String path) {
+    private void getInfo() {
         try {
-            ExifInterface exifInterface = new ExifInterface(path);
-            String guangquan = exifInterface.getAttribute(ExifInterface.TAG_APERTURE);
-            String shijain = exifInterface.getAttribute(ExifInterface.TAG_DATETIME);
-            String baoguangshijian = exifInterface.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);
-            String jiaoju = exifInterface.getAttribute(ExifInterface.TAG_FOCAL_LENGTH);
-            String chang = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH);
-            String kuan = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH);
-            String moshi = exifInterface.getAttribute(ExifInterface.TAG_MODEL);
-            String zhizaoshang = exifInterface.getAttribute(ExifInterface.TAG_MAKE);
-            String iso = exifInterface.getAttribute(ExifInterface.TAG_ISO);
-            String jiaodu = exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION);
-            String baiph = exifInterface.getAttribute(ExifInterface.TAG_WHITE_BALANCE);
-            String altitude_ref = exifInterface.getAttribute(ExifInterface.TAG_GPS_ALTITUDE_REF);
-            String altitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_ALTITUDE);
+            bar.setVisibility(View.VISIBLE);
+            final LocalMedia localMedia = selectList.get(index);
+            String path=localMedia.getPath();
+            final ExifInterface exifInterface = new ExifInterface(path);
             String latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-            String latitude_ref = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
-            String longitude_ref = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
-            String longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-            String timestamp = exifInterface.getAttribute(ExifInterface.TAG_GPS_TIMESTAMP);
-            String processing_method = exifInterface.getAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD);
-            double lat = convertRationalLatLonToFloat(latitude, latitude_ref);
-            double lon = convertRationalLatLonToFloat(longitude, longitude_ref);
+            final String latitude_ref = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+            final String longitude_ref = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+            final String longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            final double lat = convertRationalLatLonToFloat(latitude, latitude_ref);
+            final double lon = convertRationalLatLonToFloat(longitude, longitude_ref);
+//            String streetstreet = LocationUtils.getStreet(lat, lon);
+            mSearch.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
+                @Override
+                public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+
+                }
+
+                @Override
+                public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+                    String streetstreet = "";
+                    if (reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
+                        Log.i("getAddress", "null");
+                        streetstreet = "null";
+                    } else {
+                        ReverseGeoCodeResult.AddressComponent addressDetail = reverseGeoCodeResult.getAddressDetail();
+                        if (!TextUtils.isEmpty(addressDetail.province) && !TextUtils.isEmpty(addressDetail.city) && !TextUtils.isEmpty(addressDetail.district)) {
+                            Log.i("getAddress", addressDetail.province + addressDetail.city + addressDetail.district);
+                            streetstreet = addressDetail.province + addressDetail.city + addressDetail.district;
+                        } else {
+                            Log.i("getAddress", "null");
+                            streetstreet = "null";
+                        }
+                    }
+                    String guangquan = exifInterface.getAttribute(ExifInterface.TAG_APERTURE);
+                    String shijain = exifInterface.getAttribute(ExifInterface.TAG_DATETIME);
+                    String baoguangshijian = exifInterface.getAttribute(ExifInterface.TAG_EXPOSURE_TIME);
+                    String jiaoju = exifInterface.getAttribute(ExifInterface.TAG_FOCAL_LENGTH);
+                    String chang = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_LENGTH);
+                    String kuan = exifInterface.getAttribute(ExifInterface.TAG_IMAGE_WIDTH);
+                    String moshi = exifInterface.getAttribute(ExifInterface.TAG_MODEL);
+                    String zhizaoshang = exifInterface.getAttribute(ExifInterface.TAG_MAKE);
+                    String iso = exifInterface.getAttribute(ExifInterface.TAG_ISO);
+                    String jiaodu = exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION);
+                    String baiph = exifInterface.getAttribute(ExifInterface.TAG_WHITE_BALANCE);
+                    String altitude_ref = exifInterface.getAttribute(ExifInterface.TAG_GPS_ALTITUDE_REF);
+                    String altitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_ALTITUDE);
+                    String timestamp = exifInterface.getAttribute(ExifInterface.TAG_GPS_TIMESTAMP);
+                    String processing_method = exifInterface.getAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("光圈 = " + guangquan + "\n")
+                            .append("时间 = " + shijain + "\n")
+                            .append("位置 = " + streetstreet + "\n")
+                            .append("曝光时长 = " + baoguangshijian + "\n")
+                            .append("焦距 = " + jiaoju + "\n")
+                            .append("长 = " + chang + "\n")
+                            .append("宽 = " + kuan + "\n")
+                            .append("型号 = " + moshi + "\n")
+                            .append("制造商 = " + zhizaoshang + "\n")
+                            .append("ISO = " + iso + "\n")
+                            .append("角度 = " + jiaodu + "\n")
+                            .append("白平衡 = " + baiph + "\n")
+                            .append("海拔高度 = " + altitude_ref + "\n")
+                            .append("GPS参考高度 = " + altitude + "\n")
+                            .append("GPS时间戳 = " + timestamp + "\n")
+                            .append("GPS定位类型 = " + processing_method + "\n")
+                            .append("GPS参考纬度 = " + latitude_ref + "\n")
+                            .append("GPS参考经度 = " + longitude_ref + "\n")
+                            .append("GPS纬度 = " + lat + "\n")
+                            .append("GPS经度 = " + lon + "\n");
+                    localMedia.setPictureType(stringBuilder.toString());
+                    selectList.set(index,localMedia);
+                    index++;
+                    if (index<selectList.size()){
+                        getInfo();
+                    }else if (index==selectList.size()){
+                        bar.setVisibility(View.GONE);
+                        adapter.setNewData(selectList);
+                    }
+                }
+            });
             CoordinateConverter converter = new CoordinateConverter().from(CoordinateConverter.CoordType.GPS).coord(new LatLng(lat, lon));
             LatLng desLatLng = converter.convert();
             mSearch.reverseGeoCode(new ReverseGeoCodeOption().location(desLatLng).newVersion(0).radius(500));
-            String streetstreet = LocationUtils.getStreet(lat, lon);
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("光圈 = " + guangquan + "\n")
-                    .append("时间 = " + shijain + "\n")
-                    .append("位置 = " + streetstreet + "\n")
-                    .append("曝光时长 = " + baoguangshijian + "\n")
-                    .append("焦距 = " + jiaoju + "\n")
-                    .append("长 = " + chang + "\n")
-                    .append("宽 = " + kuan + "\n")
-                    .append("型号 = " + moshi + "\n")
-                    .append("制造商 = " + zhizaoshang + "\n")
-                    .append("ISO = " + iso + "\n")
-                    .append("角度 = " + jiaodu + "\n")
-                    .append("白平衡 = " + baiph + "\n")
-                    .append("海拔高度 = " + altitude_ref + "\n")
-                    .append("GPS参考高度 = " + altitude + "\n")
-                    .append("GPS时间戳 = " + timestamp + "\n")
-                    .append("GPS定位类型 = " + processing_method + "\n")
-                    .append("GPS参考纬度 = " + latitude_ref + "\n")
-                    .append("GPS参考经度 = " + longitude_ref + "\n")
-                    .append("GPS纬度 = " + lat + "\n")
-                    .append("GPS经度 = " + lon + "\n");
-            return stringBuilder.toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "";
-    }
-
-    /**
-     * 将 112/1,58/1,390971/10000 格式的经纬度转换成 112.99434397362694格式
-     *
-     * @param string 度分秒
-     * @return 度
-     */
-    private double score2dimensionality(String string) {
-        double dimensionality = 0.0;
-        if (null == string) {
-            return dimensionality;
-        }
-
-        //用 ，将数值分成3份
-        String[] split = string.split(",");
-        for (int i = 0; i < split.length; i++) {
-
-            String[] s = split[i].split("/");
-            //用112/1得到度分秒数值
-            double v = Double.parseDouble(s[0]) / Double.parseDouble(s[1]);
-            //将分秒分别除以60和3600得到度，并将度分秒相加
-            dimensionality = dimensionality + v / Math.pow(60, i);
-        }
-        return dimensionality;
     }
 
     private static double convertRationalLatLonToFloat(String rationalString, String ref) {
@@ -254,9 +264,9 @@ public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResult
             Log.i("getAddress", "null");
         } else {
             ReverseGeoCodeResult.AddressComponent addressDetail = reverseGeoCodeResult.getAddressDetail();
-            if (!TextUtils.isEmpty(addressDetail.province)&&!TextUtils.isEmpty(addressDetail.city)&&!TextUtils.isEmpty(addressDetail.district)){
-                Log.i("getAddress", addressDetail.province + addressDetail.city+addressDetail.district);
-            }else {
+            if (!TextUtils.isEmpty(addressDetail.province) && !TextUtils.isEmpty(addressDetail.city) && !TextUtils.isEmpty(addressDetail.district)) {
+                Log.i("getAddress", addressDetail.province + addressDetail.city + addressDetail.district);
+            } else {
                 Log.i("getAddress", "null");
             }
         }

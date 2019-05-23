@@ -372,11 +372,13 @@ public class PhotoPickerActivity extends AppCompatActivity {
 //     */
     private void returnData() {
         // 返回已选择的图片数据
-        Intent data = new Intent();
-        if (!TextUtils.isEmpty(action)) data.setAction(action);
-        data.putStringArrayListExtra(GlobalConstance.PHOTO_RESULT_LIST_KEY, mSelectList);
-        setResult(RESULT_OK, data);
-        finish();
+        if (mTmpFile!=null) {
+            Intent data = new Intent();
+            if (!TextUtils.isEmpty(action)) data.setAction(action);
+            data.putExtra(GlobalConstance.PHOTO_RESULT_LIST_KEY, mTmpFile.getAbsolutePath());
+            setResult(RESULT_OK, data);
+            finish();
+        }
     }
 
     /**
@@ -438,7 +440,7 @@ public class PhotoPickerActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 if (mTmpFile != null) {
                     sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + mTmpFile.getAbsolutePath())));
-                    mSelectList.add(mTmpFile.getAbsolutePath());
+//                    mSelectList.add(mTmpFile.getAbsolutePath());
                     returnData();
                 }
             } else {

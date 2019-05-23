@@ -2,13 +2,14 @@ package cn.usho.jkj.utils;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
 import android.text.TextUtils;
+
+import com.blankj.utilcode.util.FileUtils;
 
 import java.io.File;
 import java.security.MessageDigest;
@@ -91,8 +92,14 @@ public class OtherUtils {
         File file;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             String timeStamp = String.valueOf(new Date().getTime());
-            file = new File(Environment.getExternalStorageDirectory() +
-                    File.separator + timeStamp + ".jpg");
+            String path=Environment.getExternalStorageDirectory() +
+                    File.separator + Environment.DIRECTORY_DCIM+File.separator+"usho";
+            if (FileUtils.createOrExistsDir(path)) {
+                file = new File(path+File.separator+ timeStamp + ".jpg");
+            }else {
+                file = new File(Environment.getExternalStorageDirectory() +
+                        File.separator + Environment.DIRECTORY_DCIM+File.separator+"Camera"+File.separator+ timeStamp + ".jpg");
+            }
         } else {
             File cacheDir = context.getCacheDir();
             String timeStamp = String.valueOf(new Date().getTime());

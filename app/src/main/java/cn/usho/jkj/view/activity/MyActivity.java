@@ -41,12 +41,13 @@ import java.util.List;
 
 import cn.usho.jkj.R;
 import cn.usho.jkj.adapter.ListAdapter;
+import cn.usho.jkj.utils.GlobalConstance;
 import cn.usho.jkj.utils.LocationUtils;
 import cn.usho.jkj.utils.TestPhotoUtils;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
-public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
+public class MyActivity extends AppCompatActivity  {
     private Button btn, upbtn;
     private List<LocalMedia> selectList = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -86,7 +87,7 @@ public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResult
 
         // 清空图片缓存，包括裁剪、压缩后的图片 注意:必须要在上传完成后调用 必须要获取权限
         RxPermissions permissions = new RxPermissions(this);
-        permissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION).subscribe(new Observer<Boolean>() {
+        permissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.CAMERA).subscribe(new Observer<Boolean>() {
             @Override
             public void onSubscribe(Disposable d) {
             }
@@ -134,7 +135,8 @@ public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResult
                             .openGallery(PictureMimeType.ofImage())
                             .maxSelectNum(9)
                             .minSelectNum(1)
-                            .isCamera(false)// 是否显示拍照按钮
+//                            .setOutputCameraPath("/CustomPath")// 自定义拍照保存路径,可不填
+                            .isCamera(true)// 是否显示拍照按钮
                             .forResult(PictureConfig.CHOOSE_REQUEST);
                 } else {
                     Toast.makeText(MyActivity.this,
@@ -177,6 +179,10 @@ public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResult
                     index = 0;
                     getInfo();
 //                    adapter.setNewData(selectList);
+                    break;
+                case REQUEST_SELECT_PHOTO:
+                    String stringExtra = data.getStringExtra(GlobalConstance.PHOTO_RESULT_LIST_KEY);
+                    Log.i("图片-----》", stringExtra );
                     break;
             }
         }
@@ -317,25 +323,7 @@ public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResult
         }
     }
 
-    @Override
-    public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
 
-    }
-
-    @Override
-    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
-        if (reverseGeoCodeResult == null || reverseGeoCodeResult.error != SearchResult.ERRORNO.NO_ERROR) {
-            Log.i("getAddress", "null");
-        } else {
-            ReverseGeoCodeResult.AddressComponent addressDetail = reverseGeoCodeResult.getAddressDetail();
-            if (!TextUtils.isEmpty(addressDetail.province) && !TextUtils.isEmpty(addressDetail.city) && !TextUtils.isEmpty(addressDetail.district)) {
-                Log.i("getAddress", addressDetail.province + addressDetail.city + addressDetail.district);
-                Log.i("图片", reverseGeoCodeResult.getAddress());
-            } else {
-                Log.i("getAddress", "null");
-            }
-        }
-    }
 
     public void getnewPic() {
         new Thread(new Runnable() {

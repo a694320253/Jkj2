@@ -61,7 +61,7 @@ dependencies {
     //    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.2.3'
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.6.3'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
     implementation files('libs/BaiduLBS_Android.jar')
 }

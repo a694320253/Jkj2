@@ -39,17 +39,35 @@ public class PhotoUtils {
         // 只查询jpeg和png的图片
         Cursor mCursor = mContentResolver.query(imageUri, null,
                 MediaStore.Images.Media.MIME_TYPE + " in(?, ?)",
-                new String[] { "image/jpeg", "image/png" },
+                new String[]{"image/jpeg", "image/png"},
                 MediaStore.Images.Media.DATE_MODIFIED + " desc");
 
         int pathIndex = mCursor
                 .getColumnIndex(MediaStore.Images.Media.DATA);
-
+        int date_addedIndex = mCursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED);
+        int date_modifiedIndex = mCursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED);
+        int latitudeIndex = mCursor.getColumnIndex(MediaStore.Images.Media.LATITUDE);
+        int longitudeIndex = mCursor.getColumnIndex(MediaStore.Images.Media.LONGITUDE);
+        int DATE_TAKENIndex = mCursor.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN);
+//        Log.i("PhotoUtils", "getCount " + mCursor.getCount() + "        length " + mCursor.getColumnNames().length);
+//        for (int i = 0; i < mCursor.getColumnNames().length; i++) {
+//            Log.i("PhotoUtils", mCursor.getColumnNames()[i]);
+//        }
+//        Log.i("PhotoUtils", "当前时间" + System.currentTimeMillis() + "  " + TimeUtils.millis2String(System.currentTimeMillis()));
         if (mCursor.moveToFirst()) {
             do {
                 // 获取图片的路径
                 String path = mCursor.getString(pathIndex);
-
+//                long date_modified = mCursor.getLong(date_modifiedIndex);
+//                long date_added = mCursor.getLong(date_addedIndex);
+//                long datetaken = mCursor.getLong(DATE_TAKENIndex);
+//                double latitude = mCursor.getDouble(latitudeIndex);
+//                double longitude = mCursor.getDouble(longitudeIndex);
+//                String addTime = TimeUtils.millis2String(date_added);
+//                String modifiedTime = TimeUtils.millis2String(date_modified);
+//                String datetakenTime = TimeUtils.millis2String(datetaken);
+//                Log.i("PhotoUtils", path + "  date_added>" + date_added +" "+ addTime + "  date_modified>" + date_modified +" "+modifiedTime+ "  latitude>" + latitude
+//                        + "  longitude>" + longitude+" datetaken>"+datetaken+"  datetakenTime>"+datetakenTime);
                 // 获取该图片的父路径名
                 File parentFile = new File(path).getParentFile();
                 if (parentFile == null) {

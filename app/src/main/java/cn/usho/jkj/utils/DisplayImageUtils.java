@@ -5,9 +5,7 @@ import android.os.Looper;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-
-import cn.usho.jkj.R;
+import com.bumptech.glide.request.RequestOptions;
 
 /**
  * 项目名称：cn.usho.sosho.utils
@@ -19,7 +17,7 @@ import cn.usho.jkj.R;
 public class DisplayImageUtils {
 
 
-    public static void displayImageAsBitmapNormal(Context context ,String url, ImageView view, int placeholder) {
+    public static void displayImageAsBitmapNormal(Context context, String url, ImageView view, int placeholder) {
 //        Glide.with(context)
 //                .asBitmap()
 //                .load(url)
@@ -29,13 +27,14 @@ public class DisplayImageUtils {
     }
 
     public static void displayImageAsBitmap(Context context, String url, ImageView view, int placeholder) {
-
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(placeholder)
+                .error(placeholder);
         Glide.with(context)
                 .asBitmap()
                 .load(url)
-//                .placeholder(placeholder)
-//                .error(placeholder)
-//                .centerCrop()
+                .apply(options)
                 .into(view);
     }
 
@@ -86,7 +85,6 @@ public class DisplayImageUtils {
 //                .centerCrop()
 //                .into(view);
     }
-
 
 
     public static void cleanImageMemoryCache(Context context) {

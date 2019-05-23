@@ -23,6 +23,7 @@ public class GlobalConstance {
     public static final String H5_BUILD = "20160415"; //h5端build
 
     public static final String UID_KEY = "uid";
+    public static final String CURRENT_TIME = "current_time";//查看图库时间
     public static final String DATA_ID_KEY = "data_id";
     public static final String GROUP_ID_KEY = "group_id";
     public static final String WEB_URL_KEY = "web_url";

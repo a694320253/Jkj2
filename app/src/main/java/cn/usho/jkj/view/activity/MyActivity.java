@@ -30,6 +30,10 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.permissions.RxPermissions;
 import com.luck.picture.lib.tools.PictureFileUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,11 +42,12 @@ import java.util.List;
 import cn.usho.jkj.R;
 import cn.usho.jkj.adapter.ListAdapter;
 import cn.usho.jkj.utils.LocationUtils;
+import cn.usho.jkj.utils.TestPhotoUtils;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
 public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
-    private Button btn,upbtn;
+    private Button btn, upbtn;
     private List<LocalMedia> selectList = new ArrayList<>();
     private RecyclerView recyclerView;
     private ListAdapter adapter;
@@ -50,10 +55,12 @@ public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResult
     private int index = 0;
     private ProgressBar bar;
     protected static final int REQUEST_SELECT_PHOTO = 99;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+        EventBus.getDefault().register(this);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ListAdapter(R.layout.list_item, selectList);
@@ -76,7 +83,32 @@ public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResult
 
         // 初始化搜索模块，注册事件监听
         mSearch = GeoCoder.newInstance();
-//        mSearch.setOnGetGeoCodeResultListener(this);
+
+        // 清空图片缓存，包括裁剪、压缩后的图片 注意:必须要在上传完成后调用 必须要获取权限
+        RxPermissions permissions = new RxPermissions(this);
+        permissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION).subscribe(new Observer<Boolean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+            }
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+                if (aBoolean) {
+                    getnewPic();
+                } else {
+                    Toast.makeText(MyActivity.this,
+                            getString(R.string.picture_jurisdiction), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        });
     }
 
     private void requestSelectPhoto() {
@@ -269,12 +301,20 @@ public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResult
         }
 
     }
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setMessage(Boolean aBoolean) {
+        if (aBoolean){
+            upbtn.setText("发现新图片");
+        }
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mSearch.destroy();
         PictureFileUtils.deleteCacheDirFile(MyActivity.this);
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Override
@@ -295,5 +335,14 @@ public class MyActivity extends AppCompatActivity implements OnGetGeoCoderResult
                 Log.i("getAddress", "null");
             }
         }
+    }
+
+    public void getnewPic() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TestPhotoUtils.getPhotos(MyActivity.this);
+            }
+        }).start();
     }
 }
